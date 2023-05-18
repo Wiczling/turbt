@@ -6,18 +6,13 @@ author: "| Małgorzata Artymowicz\n| Wiktoria Struck-Lewicka\n| Paweł Wiczling\
   Markuszewski\n| Michał J. Markuszewski\n| Danuta Siluk\n"
 date: "`r format(Sys.Date())`"
 output:
-  html_document:
-    toc: yes
-    toc_depth: '2'
-    df_print: paged
-  bookdown::html_document2:
-    fig_caption: yes
-    toc: yes
-    theme: flatly
-    toc_float: yes
   pdf_document:
     toc: yes
     toc_depth: '2'
+  bookdown::html_document2:
+    toc: true
+    theme: flatly
+    toc_float: true
 adress: "| Department of Biopharmaceutics and Pharmacodynamics, Medical University
   of Gdańsk, Gen. J. Hallera 107, 80-416 Gdańsk, Poland\n| Department of Urology,
   Medical University of Gdańsk, Gdańsk, Poland\n"
@@ -48,7 +43,7 @@ set.seed(10271998) ## not required but assures repeatable results
 
 # Load data
 
-The raw data comprise urine concentration measurements [$\mu$M] of selected nucleosides, deoxynucleosides and creatinine. The data was collected at 7 time point (before, 24 h, about 1, 3, 6, 9, and 12 months after the  transurethral resection of bladder tumor.
+The raw data comprise urine concentration measurements [$\mu$M] of selected nucleosides, deoxynucleosides and creatinine. The data was collected at 7 time points (before, 24 h, about 1, 3, 6, 9, and 12 months after the  transurethral resection of bladder tumor).
 
 ```{r}
 data_wide = read.csv('RawData/data.csv') 
@@ -60,7 +55,7 @@ head(data_wide)
 
 ```
 
-The data was transformed to a long format. Three variables were added: i) creatinine normalized concentrations (DVCRE), (ii) logarithm of concentrations (logDV) and (iii) logarithm of creatinine normalized concentrations (lgDVCRE):
+The data was transformed to a long format. Three variables were added: i) creatinine normalized concentrations (DVCRE), (ii) logarithm of concentrations (logDV) and (iii) logarithm of creatinine normalized concentrations (logDVCRE):
 
 ```{r}
 data_long <- tidyr::gather(data_wide, MET, DV, Pse:CRE, factor_key=TRUE)
@@ -135,7 +130,7 @@ rm(data_wide_2)
 
 # Data analysis
 
-The data was analyzed using [brms package](https://paul-buerkner.github.io/brms/). It fits the Bayesian generalized (non-)linear multivariate multilevel models using Stan. The default priors were used. The Time Points 3:7 were combined assuming no changes in urine concentrations for times > 2 weeks. The model assumes fixed effects of TimePoint, MET and the interaction of MET:TIMEPoint. The Sample and ID were modeled as random effects. The variance for between patient variability was different for each MET and correlated. The variance for within subjects variability was also assumed to be different for each MET.
+The data was analyzed using [brms package](https://paul-buerkner.github.io/brms/). It fits the Bayesian generalized (non-)linear multivariate multilevel models using Stan. The default priors were used. The Time Points 3:7 were combined assuming no changes in urine concentrations for times > 2 weeks. The model assumes fixed effects of TimePoint, MET and the interaction of MET:TIMEPoint. The Sample and ID were modeled as random effects. The variance for between patient variability was different for each MET and correlated. The variance for within subject variability was also assumed to be different for each MET.
 
 ```{r include=TRUE, eval=FALSE}
 
